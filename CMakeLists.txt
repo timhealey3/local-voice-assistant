@@ -16,6 +16,10 @@ include_directories(/opt/homebrew/include)
 
 add_executable(voiceAssistant main.cpp
         llm/localLLM.cpp
-        llm/localLLM.h)
+        llm/localLLM.h
+        audio/audioUtil.cpp
+        audio/audioUtil.h
+        API.cpp
+        API.h)
 
 target_link_libraries(voiceAssistant PRIVATE ${ESPEAK_LIB} cpr::cpr)

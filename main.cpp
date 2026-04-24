@@ -1,29 +1,11 @@
 #include <iostream>
 #include <string>
-#include <espeak-ng/speak_lib.h>
 #include "llm/localLLM.h"
 #include "nlohmann/json.hpp"
-#include <cpr/cpr.h>
+#include "API.h"
+#include "audio/audioUtil.h"
 
 enum class OutputEnum { spotify, light, unsure };
-
-std::string callLargeModel() {
-    std::string prompt = "Explain quantum physics to a cat.";
-
-    cpr::Response r = cpr::Post(
-        cpr::Url{"http://localhost:18080/largeLLMCall"},
-        cpr::Body{prompt},
-        cpr::Header{{"Content-Type", "text/plain"}}
-    );
-
-    if (r.status_code == 200) {
-        std::cout << "LLM Response: " << r.text << std::endl;
-    } else {
-        std::cerr << "Error: " << r.status_code << " - " << r.error.message << std::endl;
-        throw std::runtime_error(r.error.message);
-    }
-    return r.text;
-}
 
 OutputEnum convertResponseEnum(const std::string& response) {
     std::unordered_map<std::string, OutputEnum> map = {
@@ -46,20 +28,11 @@ std::string decisionRouter(const OutputEnum& outputEnum, const nlohmann::json& j
             break;
         case OutputEnum::unsure:
             std::cout << "unsure" << std::endl;
-            res = callLargeModel();
+            auto TODO = "TODO IMPLEMENT THIS";
+            res = API::callExternalLLM(TODO);
             break;
     }
     return res;
-}
-
-void playAudioResponse(std::string text) {
-    try {
-        espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 0, NULL, 0);
-        espeak_Synth(text.c_str(), text.length() + 1, 0, POS_CHARACTER, 0, espeakCHARS_AUTO, NULL, NULL);
-        espeak_Synchronize();
-    } catch (std::exception& e) {
-        std::cerr << "Audio failed to play: "  << e.what() << std::endl;
-    }
 }
 
 int main() {
@@ -73,6 +46,6 @@ int main() {
 
     OutputEnum outputEnum = convertResponseEnum(jsonResponse["toolName"]);
     std::string decisionResponse = decisionRouter(outputEnum, jsonResponse);
-    playAudioResponse(decisionResponse);
+    audioUtil::playAudio(decisionResponse);
     return 0;
 }
