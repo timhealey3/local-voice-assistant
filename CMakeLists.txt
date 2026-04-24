@@ -19,7 +19,7 @@ add_executable(voiceAssistant main.cpp
         llm/localLLM.h
         audio/audioUtil.cpp
         audio/audioUtil.h
-        API.cpp
-        API.h)
+        API/API.cpp
+        API/API.h)
 
 target_link_libraries(voiceAssistant PRIVATE ${ESPEAK_LIB} cpr::cpr)

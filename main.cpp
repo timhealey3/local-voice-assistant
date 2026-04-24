@@ -2,7 +2,7 @@
 #include <string>
 #include "llm/localLLM.h"
 #include "nlohmann/json.hpp"
-#include "API.h"
+#include "API/API.h"
 #include "audio/audioUtil.h"
 
 enum class OutputEnum { spotify, light, unsure };
@@ -43,7 +43,6 @@ int main() {
     std::string response = localLLM.generateResponseString(inputText);
     nlohmann::json jsonResponse = nlohmann::json::parse(response);
     std::cout << jsonResponse << std::endl;
-
     OutputEnum outputEnum = convertResponseEnum(jsonResponse["toolName"]);
     std::string decisionResponse = decisionRouter(outputEnum, jsonResponse);
     audioUtil::playAudio(decisionResponse);

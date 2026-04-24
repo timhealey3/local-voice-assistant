@@ -3,7 +3,7 @@
 //
 #include <string>
 #include <iostream>
-#include "llm/localLLM.h"
+#include "../llm/localLLM.h"
 #include "nlohmann/json.hpp"
 #include <cpr/cpr.h>
 
